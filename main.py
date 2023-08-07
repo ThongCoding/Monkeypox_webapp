@@ -1,7 +1,5 @@
 import streamlit as st
 st.set_page_config(page_title="Monkeypox Reporting", page_icon=":bar_chart:", layout= "wide")
-import form
-import dashboard
 from PIL import Image
 import streamlit.components.v1 as components
 from pathlib import Path
