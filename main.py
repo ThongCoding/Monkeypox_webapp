@@ -1,16 +1,10 @@
 import streamlit as st
 st.set_page_config(page_title="Monkeypox Reporting", page_icon=":bar_chart:", layout= "wide")
 from PIL import Image
-import streamlit.components.v1 as components
-from pathlib import Path
 import pandas as pd
 import plotly.express as px
-import openpyxl
 from streamlit_option_menu import option_menu
 import json
-import numpy as np
-from streamlit_tags import st_tags
-import plotly.graph_objects as go
 
 # implement css into streamlit
 with open('style.css') as f:
