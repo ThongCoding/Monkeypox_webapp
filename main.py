@@ -93,7 +93,7 @@ if (selected == 'Overview'):
             with sub_col1:
                 df = pd.read_csv('caseCount.csv')  
 
-                with st.expander('Cases by States'):
+                with st.expander('CASES BY STATES:'):
                     for index, row in df.iterrows():
                         st.divider()
                         st.write(f"{row['Location']} | {row['Cases']}")
@@ -110,30 +110,31 @@ if (selected == 'Overview'):
                 st.markdown(css, unsafe_allow_html=True)
 
             with sub_col2:
-                f = open('usState.json')
-                states_data = json.load(f)
-                df_states = pd.read_csv("caseCount.csv")
+                st.write("State Map")
+                # f = open('usState.json')
+                # states_data = json.load(f)
+                # df_states = pd.read_csv("caseCount.csv")
 
-                figure_1 = px.choropleth_mapbox(df_states, geojson = states_data, locations='Location', color='Cases',
-                                        featureidkey = "properties.NAME",
-                                        color_continuous_scale="blugrn",
-                                        range_color=(0, 6000),
-                                        mapbox_style = 'carto-positron',
-                                        opacity = 0.5,
-                                        zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
-                                        #scope="usa",
-                                        labels={'Cases':'Cases'}
-                                        )
+                # figure_1 = px.choropleth_mapbox(df_states, geojson = states_data, locations='Location', color='Cases',
+                #                         featureidkey = "properties.NAME",
+                #                         color_continuous_scale="blugrn",
+                #                         range_color=(0, 6000),
+                #                         mapbox_style = 'carto-positron',
+                #                         opacity = 0.5,
+                #                         zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
+                #                         #scope="usa",
+                #                         labels={'Cases':'Cases'}
+                #                         )
 
-                figure_1.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, geo_bgcolor= '#0E1113')
-                st.plotly_chart(figure_1)
+                # figure_1.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, geo_bgcolor= '#0E1113')
+                # st.plotly_chart(figure_1)
 
         with tab2:
             sub_col1, sub_col2 = st.columns([1,3])
             with sub_col1:
                 df = pd.read_csv('globalCaseDeath.csv')  
 
-                with st.expander('Cases by Country'):
+                with st.expander('CASES BY COUNTRY'):
                     for index, row in df.iterrows():
                         st.divider()
                         st.write(f"{row['Country']} | {row['Cases']}")
@@ -150,21 +151,22 @@ if (selected == 'Overview'):
                 st.markdown(css, unsafe_allow_html=True)
 
             with sub_col2:
-                contries_geo = open('countries.geojson')
-                countries_data = json.load(contries_geo)
-                df_global = pd.read_csv('globalCaseDeath.csv')
+                st.write("World Map")
+                # contries_geo = open('countries.geojson')
+                # countries_data = json.load(contries_geo)
+                # df_global = pd.read_csv('globalCaseDeath.csv')
 
-                figure_2 = px.choropleth_mapbox(df_global, geojson = countries_data, locations='Country', color='Cases',
-                                featureidkey = "properties.ADMIN",
-                                color_continuous_scale="blugrn",
-                                range_color=(1, 31000),
-                                # scope="world",
-                                mapbox_style = 'carto-positron',
-                                zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
-                                labels={'Cases':'Cases'}
-                                )
-                figure_2.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, geo_bgcolor= '#0E1113')
-                st.plotly_chart(figure_2)
+                # figure_2 = px.choropleth_mapbox(df_global, geojson = countries_data, locations='Country', color='Cases',
+                #                 featureidkey = "properties.ADMIN",
+                #                 color_continuous_scale="blugrn",
+                #                 range_color=(1, 31000),
+                #                 # scope="world",
+                #                 mapbox_style = 'carto-positron',
+                #                 zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
+                #                 labels={'Cases':'Cases'}
+                #                 )
+                # figure_2.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, geo_bgcolor= '#0E1113')
+                # st.plotly_chart(figure_2)
 
 
     with main_col2:
@@ -201,18 +203,40 @@ if (selected == 'Overview'):
 
 if (selected == 'Demographic'):
     gender_data = pd.read_csv("sexGender.csv")
-    del gender_data[gender_data.columns[0]]
-    gender_data_sum = gender_data.sum()
-    input_col, pie_col = st.columns(2)
-    gender_data_sum = gender_data_sum.reset_index()
-    gender_data_sum.columns = ['Gender', 'Value']
-    # st.dataframe(gender_data_sum)
-    # st.dataframe(gender_data_sum)
 
-    genderList = gender_data_sum['Gender']
-    value = gender_data_sum['Value']
-    fig = px.pie(gender_data_sum, names = genderList, values = value)    
-    st.plotly_chart(fig)
+    demo_col1, demo_col2 = st.columns(2)
+
+    with demo_col1:
+        names = list(gender_data.head())[1:]
+        values = [  int(gender_data["Another sex/gender"].sum()),
+                    int(gender_data["Men"].sum()),
+                    int(gender_data["Transgender men"].sum()),
+                    int(gender_data["Transgender women"].sum()),
+                    int(gender_data["Women"].sum())
+            ]
+        colors = ['#1D3354', '#D64045', '#E9FFF9', '#8ED8DB', '#467599']
+        fig = px.pie(gender_data, values=values, names=names, color_discrete_sequence=colors)
+        
+        st.plotly_chart(fig, use_container_width=True)
+    
+    with demo_col2:
+    #     gender_data['web_age_grp'].value_counts()
+    #     fix = px.bar(gender_data, x = 'web_age_grp', color = 'web_age_grp')
+    #     fix.show()
+
+        # def drawAgeDistro():
+        pct_gc = gender_data.copy(deep=True)
+        pct_gc.set_index('web_age_grp', inplace=True)
+        
+        sums = sum(list(pct_gc.sum(axis=1)))
+        ages = pct_gc.index.values.tolist()
+        genders = list(pct_gc.head())
+        colors = ['#8ED8DB', '#1D3354', '#467599', '#E9FFF9', '#D64045']
+
+        pct_gc = pct_gc.div(sums)
+
+        fig = px.bar(pct_gc, x=ages, y=genders, color_discrete_sequence=colors)
+        st.plotly_chart(fig, use_container_width=True)
 
 
 
