@@ -202,6 +202,64 @@ if (selected == 'Overview'):
         # st.markdown(css, unsafe_allow_html=True)
 
 if (selected == 'Demographic'):
+    def calculateDeltas(weeks):
+        pairs = [pd.Series(list((gender_tests.loc[weeks[0]][0], gender_tests.loc[weeks[1]][0]))),
+            pd.Series(list((gender_tests.loc[weeks[0]][1], gender_tests.loc[weeks[1]][1]))),
+            pd.Series(list((gender_tests.loc[weeks[0]][2], gender_tests.loc[weeks[1]][2]))),
+            pd.Series(list((gender_tests.loc[weeks[0]][3], gender_tests.loc[weeks[1]][3])))
+            ]
+
+        deltaPairs = list(map(lambda x: round(x.pct_change()*100,2), pairs))
+        deltas = []
+        for i in range(len(deltaPairs)):
+            deltas.append(deltaPairs[i][1])
+
+        return deltas
+
+
+    def displayMetrics(weeks, isSingle):
+        labels = list(gender_tests.head())
+        col1,col2,col3,col4 = st.columns(4)
+
+        # Display only the data; no deltas 
+        if isSingle:
+            with col1:
+                st.metric(label=labels[0], value=gender_tests.loc[weeks[0]][0])
+            with col2:
+                st.metric(label=labels[1], value=str(gender_tests.loc[weeks[0]][1])+"%")
+            with col3:
+                st.metric(label=labels[2], value=gender_tests.loc[weeks[0]][2])
+            with col4:
+                st.metric(label=labels[3], value=str(gender_tests.loc[weeks[0]][3])+"%")
+        else:
+            deltas = calculateDeltas(weeks)
+            with col1:
+                st.metric(label=labels[0], value=gender_tests.loc[weeks[1]][0], delta=str(deltas[0])+"%")
+            with col2:
+                st.metric(label=labels[1], value=str(gender_tests.loc[weeks[1]][1])+"%", delta=str(deltas[1])+"%")
+            with col3:
+                st.metric(label=labels[2], value=gender_tests.loc[weeks[1]][2], delta=str(deltas[2])+"%")
+            with col4:
+                st.metric(label=labels[3], value=str(gender_tests.loc[weeks[1]][3])+"%", delta=str(deltas[3])+"%")
+
+
+    label = "Select Two Weeks to Compare"
+    options = gender_tests.index.tolist()
+    firstWk = options[0]
+    finalWk = options[-1]
+
+    weeks = st.multiselect(label=label, options=options, max_selections=2, default=[firstWk, finalWk])
+
+    weeks.sort()
+
+    if len(weeks) == 0:
+        st.error("Must include at least one week", icon="🚨")
+    elif len(weeks) == 1:
+        displayMetrics(weeks=weeks, isSingle=True)
+    else:
+        displayMetrics(weeks=weeks, isSingle=False)
+
+    # Display Pie and Bar Chart
     gender_data = pd.read_csv("sexGender.csv")
 
     demo_col1, demo_col2 = st.columns(2)
