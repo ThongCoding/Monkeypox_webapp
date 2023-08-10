@@ -11,16 +11,6 @@ with open('style.css') as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 
-# page_bg = f"""
-# <style>
-# [data-testid="stAppViewContainer"] > .main {{
-# background-color: #353535;
-# }}
-# </style>
-# """
-
-# st.markdown(page_bg, unsafe_allow_html=True)
-
 # Setting up collums for display website header-title
 col1, col2, col3 = st.columns(3, gap = 'medium')
 
@@ -80,13 +70,6 @@ if (selected == 'Overview'):
 
         # Setting up 2 tabs for map options
         tab1, tab2 = st.tabs(['States Map','Global Map'])
-
-        # map_choices = option_menu('Map Options',
-                        
-        #                 ['States Map',
-        #                 'Global Map'],
-        #                 icons=[':statue_of_liberty:',':world_map:'],
-        #                 default_index=0)
         
         with tab1:
             sub_col1, sub_col2 = st.columns([1,3])
@@ -110,24 +93,23 @@ if (selected == 'Overview'):
                 st.markdown(css, unsafe_allow_html=True)
 
             with sub_col2:
-                st.write("State Map")
-                # f = open('usState.json')
-                # states_data = json.load(f)
-                # df_states = pd.read_csv("caseCount.csv")
+                f = open('usState.json')
+                states_data = json.load(f)
+                df_states = pd.read_csv("caseCount.csv")
 
-                # figure_1 = px.choropleth_mapbox(df_states, geojson = states_data, locations='Location', color='Cases',
-                #                         featureidkey = "properties.NAME",
-                #                         color_continuous_scale="blugrn",
-                #                         range_color=(0, 6000),
-                #                         mapbox_style = 'carto-positron',
-                #                         opacity = 0.5,
-                #                         zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
-                #                         #scope="usa",
-                #                         labels={'Cases':'Cases'}
-                #                         )
+                figure_1 = px.choropleth_mapbox(df_states, geojson = states_data, locations='Location', color='Cases',
+                                        featureidkey = "properties.NAME",
+                                        color_continuous_scale="blugrn",
+                                        range_color=(0, 6000),
+                                        mapbox_style = 'carto-positron',
+                                        opacity = 0.5,
+                                        zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
+                                        #scope="usa",
+                                        labels={'Cases':'Cases'}
+                                        )
 
-                # figure_1.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, geo_bgcolor= '#0E1113')
-                # st.plotly_chart(figure_1)
+                figure_1.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, geo_bgcolor= '#0E1113')
+                st.plotly_chart(figure_1)
 
         with tab2:
             sub_col1, sub_col2 = st.columns([1,3])
@@ -151,22 +133,21 @@ if (selected == 'Overview'):
                 st.markdown(css, unsafe_allow_html=True)
 
             with sub_col2:
-                st.write("World Map")
-                # contries_geo = open('countries.geojson')
-                # countries_data = json.load(contries_geo)
-                # df_global = pd.read_csv('globalCaseDeath.csv')
+                contries_geo = open('countries.geojson')
+                countries_data = json.load(contries_geo)
+                df_global = pd.read_csv('globalCaseDeath.csv')
 
-                # figure_2 = px.choropleth_mapbox(df_global, geojson = countries_data, locations='Country', color='Cases',
-                #                 featureidkey = "properties.ADMIN",
-                #                 color_continuous_scale="blugrn",
-                #                 range_color=(1, 31000),
-                #                 # scope="world",
-                #                 mapbox_style = 'carto-positron',
-                #                 zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
-                #                 labels={'Cases':'Cases'}
-                #                 )
-                # figure_2.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, geo_bgcolor= '#0E1113')
-                # st.plotly_chart(figure_2)
+                figure_2 = px.choropleth_mapbox(df_global, geojson = countries_data, locations='Country', color='Cases',
+                                featureidkey = "properties.ADMIN",
+                                color_continuous_scale="blugrn",
+                                range_color=(1, 31000),
+                                # scope="world",
+                                mapbox_style = 'carto-positron',
+                                zoom=3, center = {"lat": 37.0902, "lon": -95.7129},
+                                labels={'Cases':'Cases'}
+                                )
+                figure_2.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, geo_bgcolor= '#0E1113')
+                st.plotly_chart(figure_2)
 
 
     with main_col2:
@@ -190,16 +171,6 @@ if (selected == 'Overview'):
             unsafe_allow_html=True  )
 
     st.divider()
-        # # add a scrollbar
-        # css='''
-        # <style>
-        #     [data-testid="stExpander"] div:has(>.streamlit-expanderContent) {
-        #         overflow: scroll;
-        #         height: 400px;
-        #     }
-        # </style>
-        # '''
-        # st.markdown(css, unsafe_allow_html=True)
 
 if (selected == 'Demographic'):
     gender_test_data = pd.read_csv('labTests.csv')
@@ -349,4 +320,4 @@ if (selected == 'Form'):
     enter = st.button('Enter')
 
 if (selected == 'Prediction'):
-    st.write('Prediction')
+    st.write('Work in Progress .....')
