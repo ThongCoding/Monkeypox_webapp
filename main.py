@@ -238,6 +238,17 @@ if (selected == 'Demographic'):
         fig = px.bar(pct_gc, x=ages, y=genders, color_discrete_sequence=colors)
         st.plotly_chart(fig, use_container_width=True)
 
+    race_data = pd.read_csv('ethnicity_cases.csv')
+    st.header("Weekly Percentage Difference of Race")
+
+    options = race_data.columns[1:]
+    series = race_data.iloc[-1][1:]
+    max_value = series.max()
+    default = series[series == max_value].index[0]
+
+    races = st.multiselect(label="Select which races to display", options=options, default=default)
+    st.line_chart(data=race_data, x='Timeline', y=races, width=700, height=700)
+
 
 
 
